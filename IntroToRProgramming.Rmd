@@ -1,0 +1,251 @@
+---
+title: "R Programming"
+output: html_document
+date: "2024-06-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction to R programming for Data Science
+
+myPath<-"C:\\Users\\penza\\Documents\\Ed\\IBM Data Analytics with Excel and R\\5 Intro to R Programming\\The_Artist.txt"
+
+setwd("C:\\Users\\penza\\Documents\\Ed\\IBM Data Analytics with Excel and R\\5 Intro to R Programming")
+
+my_data <- readLines("The_Artist.txt")
+my_data
+```{r}
+myPath<-"C:\\Users\\penza\\Documents\\Ed\\IBM Data Analytics with Excel and R\\5 Intro to R Programming\\The_Artist.txt"
+
+setwd("C:\\Users\\penza\\Documents\\Ed\\IBM Data Analytics with Excel and R\\5 Intro to R Programming")
+
+my_data <- readLines("The_Artist.txt")
+my_data
+```
+
+```{r}
+length(my_data)
+file.size("The_Artist.txt")
+```
+There is another method scan() which can be used to read .txt files.
+
+The Difference in readLines() and scan() method is that, readLines()
+is used to read text files line by line whereas scan() method read the text files word by word.
+
+scan() method takes two arguments. First is the file path and second argument is
+the string expression according to which we want to separate the words.
+
+Like in example below, we pass an empty string as the separator argument.
+
+```{r}
+my_data1 <- scan("The_Artist.txt", "")
+my_data1
+length(my_data1)
+```
+
+
+Coding Exercise:
+Get the frequency for each word in “The_Artist.txt” file. (HINT: convert my_data1 to factor and use summary() function)
+
+```{r}
+my_data1<-as.factor(my_data1)
+summary(my_data1)
+```
+
+The first function is nchar() which will return the total number of characters in the given string.
+Let’s find out how many characters are there in the first element of my_data variable.
+```{r}
+nchar(my_data[1])
+```
+
+Now, sometimes we need the whole string to be in Upper Case. To do so, there is a function called toupper() in
+R which takes a string as input and provides the whole string in upper case at output.
+```{r}
+toupper(my_data[3])
+tolower(my_data[3])
+```
+
+what if we want to replace any characters in given string?
+
+This operation can also be performed in R using chartr() method which takes three arguments.
+The first argument is the characters which we want to replace in string,
+second argument is the new characters and the last argument is the string on which operation will be performed.
+
+Let’s replace white spaces in the string with the hyphen (-) sign in the first element of
+the my_data variable.
+
+```{r}
+chartr(" ", "-", my_data[1])
+```
+Or use this funtion
+```{r}
+gsub(" ", "-", my_data[1])
+```
+Previously, we learned that we can read file word by word using scan() function.
+But what if we want to split the given string word by word?
+
+This can be done using strsplit() method. Let’s split the string according to the white spaces.
+
+```{r setup include=F     }
+character_list <- strsplit(my_data[1], " ")
+word_list <- unlist(character_list)
+word_list
+```
+In above code block, we separate the string word by word, but strsplit() method provides a list at the output which contains
+all the separated words as single element which is more complex to read.
+Thus, to make it more easy to read each word as single element, we used unlist() method which converts
+the list into character vector and now we can easily access each word as a single element.
+
+
+Coding Exercise:
+Replace the space characters in the 3rd element of my_data vector with underscore _,
+then split the string by _
+
+```{r}
+word_list<-strsplit(gsub(" ","_", my_data[3]), "_")
+word_list<-unlist(a)
+```
+
+Sorting is also possible in R.
+Let’s use sort() method to sort elements of the word_list character vector in ascending order.
+
+```{r}
+sorted_list <- sort(word_list)
+sorted_list
+```
+Now, we sort all the elements of word_list character vector. Let’s use paste() function here,
+which is used to concatenate strings. This method takes two arguments,
+the strings we want to concatenate and collapse argument which defines the separator in the words.
+
+Here, we are going to concatenate all words of sorted_list character vector into a single string.
+
+```{r}
+paste(sorted_list, collapse = " ")
+```
+There is another function substr() in R which is used to get a sub section of the string.
+
+Let’s take an example to understand it more. In example below, we use the substr() method and provide
+it three arguments. First argument is the data string from which we want the sub string.
+Second argument is the starting point from where function will start reading the string and the third argument is the stopping point till where we want the function to read string.
+
+```{r}
+sub_string <- substr(my_data[1], start = 4, stop = 50)
+sub_string
+```
+As the sub string that we get in code block above, have some white spaces at the initial and end points.
+So, to quickly remove them, we can use trimws() method of R like shown below.
+
+```{r}
+trimws(sub_string)
+```
+To read string from last, we are using stringr library.
+This library contains str_sub() method, which takes same arguments as sub_stirng
+method but read string from last.
+
+Like in the example below, we provide a data string and both starting and end
+points with negative values which indicates that we are reading string from last.
+
+```{r}
+library(stringr)
+library(stringr)
+str_sub(my_data[1], -8, -1)
+```
+# Regular Expressions
+Regular Expressions are generic expressions that are used to match patterns in strings and text.
+A way we can exemplify this is with a simple expression that can match with an email string.
+But before we write it, let’s look at how an email is structured:
+
+test@testing.com
+
+So, an email is composed by a string followed by an @ symbol followed by another string. In R regular expressions, we can express this as:
+
+$.+@.+$
+
+Where:
+
+The . symbol matches with any character.
+The + symbol repeats the previous symbol one or more times. So, .+ will match with any string.
+The @ symbol only matches with the @ character.
+Now, for our problem, which is extracting the domain from an email excluding the regional url code, we need an expression that
+specifically matches with what we want:
+
+@.+\\.
+
+Where the \\. symbol specifically matches with the ‘.’ character.
+
+Now let’s look at some R functions that work with regular expressions.
+
+The grep function below takes in a regular expression and a list of strings to search through
+and returns the positions of where they appear in the list.
+
+
+```{r}
+email_df <- read.csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-RP0101EN-Coursera/v2/dataset/email%20list.csv")
+email_df
+```
+Then search the email list to find which one matches an email pattern
+```{r}
+grep("@.+",  c("test@testing.com" , "not an email", "test2@testing.com"))
+```
+grep also has an extra parameter called ‘value’ that changes the output to display the strings instead of the list positions.
+
+```{r}
+grep("@.+",  c("test@testing.com", "not an email", "test2@testing.com"), value=TRUE)
+```
+Coding Exercise: Use a regular expression to check if a string is an email address ending with .com
+```{r}
+grep(".*\\.com",c("test@testing.com", "not an email", "test2@testing.com"))
+```
+The next function, gsub, is a substitution function.
+It takes in a regular expression, the string you want to swap in with the matches and a list of
+strings you want to perform the swap with. The code cell below updates valid emails with a new domain:
+
+```{r}
+gsub("@.+", "@newdomain.com", c("test@testing.com", "not an email", "test2@testing.com"))
+```
+The functions below, regexpr and regmatches, work in conjunction to extract the matches found by a
+regular expression specified in regexpr.
+
+```{r}
+matches <- regexpr("@.*", c("test@testing.com", "not an email", "test2@testing.com"))
+regmatches(c("test@testing.com", "not an email", "test2@testing.com"), matches)
+```
+This function is actually perfect for our problem since we simply need to extract the specific information we want.
+So let’s use it with the regular expression we defined above and store the extracted strings in a new column in our data frame.
+
+```{r}
+matches <- regexpr("@.*\\.", email_df[,'Email'])
+email_df[,'Domain'] = regmatches(email_df[,'Email'], matches)
+email_df
+```
+
+
+
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
