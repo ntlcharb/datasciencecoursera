@@ -1,0 +1,18 @@
+---
+title: "HTTP Requests"
+output: html_document
+date: "2024-06-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+HTTP Methods| Description
+------------|-------------
+GET         | Retrieves data from the server
+POST        | Submits data to server
+PUT         | Updates data already on server
+DELETE      | Deletes data from server
+
+[HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status?utm_medium=Exinfluencer&utm_source=Exinfluencer&utm_content=000026UJ&utm_term=10006555&utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkRP0101ENCoursera889-2022-01-01)
